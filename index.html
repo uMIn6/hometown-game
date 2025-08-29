@@ -413,6 +413,46 @@
           {label:"自行運用（無變化）", apply:s=>{}}
         ]
       },
+    {
+        id:"scandal",
+        text:"有人謠傳你挪用公益款項去買跑車，若不處理將嚴重影響你的聲譽。",
+        choices:[
+          {label:"公開財務明細：花$5,000公關費澄清，信任+10", apply:s=>{s.money-=5000; s.trust=Math.min(100,s.trust+10)}},
+          {label:"冷處理：不回應謠言，信任-10", apply:s=>{s.trust=Math.max(0,s.trust-10)}}
+        ]
+      },
+      {
+        id:"fundraiser",
+        text:"當地企業看見了你的努力，願意舉辦一場聯合慈善募款，但需投入人力協辦。",
+        choices:[
+          {label:"全力協辦：花費$8,000人力成本，隨機獲得$20,000~$50,000募款", apply:s=>{s.money-=8000; s.money+=Math.floor(Math.random()*(50000-20000+1))+20000;}},
+          {label:"婉拒：專注當下專案，無收益也無花費", apply:s=>{}}
+        ]
+      },
+      {
+        id:"volunteer",
+        text:"社群自發性組織志工團體，願意為你的專案提供無償勞力，但需要你提供物資支持。",
+        choices:[
+          {label:"提供物資：花$3,000，隨機提升任一指標+5", apply:s=>{const metrics = ['edu', 'health', 'water', 'jobs', 'sports', 'maint']; const randomMetric = metrics[Math.floor(Math.random()*metrics.length)]; s.money-=3000; s.metrics[randomMetric]=Math.min(100, s.metrics[randomMetric]+5);}},
+          {label:"無力支持：感謝他們的好意，但無資金，信任-5", apply:s=>{s.trust=Math.max(0, s.trust-5);}}
+        ]
+      },
+      {
+        id:"policy",
+        text:"政府考慮推動一項新政策，將影響你部分專案的合法性。你必須遊說議員。",
+        choices:[
+          {label:"積極遊說：花費$15,000，提升信任+5，並避免運行-8", apply:s=>{s.money-=15000; s.trust=Math.min(100,s.trust+5);}},
+          {label:"不介入：省下費用，但運行-8", apply:s=>{s.metrics.maint=Math.max(0, s.metrics.maint-8);}}
+        ]
+      },
+      {
+        id:"media",
+        text:"當地媒體想拍攝一部關於你的紀錄片，這能讓你的計畫廣為人知，但需要花時間配合。",
+        choices:[
+          {label:"同意拍攝：信任+8，下個月月收入額外增加$10,000", apply:s=>{s.trust=Math.min(100,s.trust+8); s.money+=10000;}},
+          {label:"拒絕：無變化", apply:s=>{}}
+        ]
+      }
     ];
 
     // 工具
