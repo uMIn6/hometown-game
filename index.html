@@ -449,7 +449,7 @@
         id:"media",
         text:"當地媒體想拍攝一部關於你的紀錄片，這能讓你的計畫廣為人知，但需要花時間配合。",
         choices:[
-          {label:"同意拍攝：信任+8，下個月月收入額外增加$200", apply:s=>{s.trust=Math.min(100,s.trust+8); s.money+=200;}},
+          {label:"同意拍攝：信任+8，接下來月收入額外增加$200", apply:s=>{s.trust=Math.min(100,s.trust+8); s.baseIncome+=200;}},
           {label:"拒絕：無變化", apply:s=>{}}
         ]
       }
