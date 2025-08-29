@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-s=cale=1" />
   <title>希望旅程</title>
   <style>
     :root{
@@ -59,9 +59,46 @@
     .foot-grid{display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center}
 
     .mini{font-size:12px}
-    .floating-btn {position: fixed;right: 12px;bottom: 12px;z-index: 1000;padding: 10px 14px;background: linear-gradient(180deg,#12325a 0%,#0d2545 100%);
-    border: 1px solid #1e3a5f;border-radius: 12px;color: #e5e7eb;font-weight: 600;cursor: pointer;box-shadow: 0 4px 12px rgba(0,0,0,.4);}
-    .floating-btn:hover { filter: brightness(1.1); }
+    
+    #fixed-footer {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      z-index: 1000;
+      background: linear-gradient(180deg, #0b1222cc, #0b1222);
+      border: 1px solid #1f2a44;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.4);
+      transition: all 0.5s ease-in-out;
+      width: auto;
+      transform-origin: bottom right;
+    }
+    #fixed-footer.shrink {
+      width: auto;
+      padding: 10px 14px;
+      transform: scale(0.8);
+      cursor: pointer;
+    }
+    #fixed-footer.shrink > .foot-grid > div {
+      display: none;
+    }
+    #fixed-footer.shrink .btn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      font-size: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #fixed-footer.shrink .btn:first-child { display: none; }
+    #fixed-footer.shrink .btn:last-child { margin-left: -8px; }
+    #fixed-footer.shrink .btn-acc::before {
+      content: "✅";
+      font-size: 24px;
+    }
   </style>
 </head>
 <body>
@@ -150,19 +187,7 @@
       </div>
 
       <div class="cards" id="eventList" aria-live="polite"></div>
-
-      <div class="sticky-footer" id="footerBox">
-        <div class="foot-grid">
-          <div class="mini muted">
-            提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。
-          </div>
-          <button class="btn" id="skipBtn">➡️ 禱告</button>
-          <button class="btn btn-acc" id="nextBtn">✅ 行動</button>
-        </div>
-      </div>
     </main>
-
-    <button id="toggleFooter" class="floating-btn" style="display:none;">📌 行動</button>
 
     <aside class="panel right stack">
       <div class="row" style="justify-content:space-between; align-items:flex-end">
@@ -175,6 +200,16 @@
 
       <div class="cards" id="projectList"></div>
     </aside>
+  </div>
+
+  <div id="fixed-footer" class="active">
+    <div class="foot-grid">
+      <div class="mini muted">
+        提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。
+      </div>
+      <button class="btn" id="skipBtn">➡️ 禱告</button>
+      <button class="btn btn-acc" id="nextBtn">✅ 行動</button>
+    </div>
   </div>
 
   <script>
@@ -567,6 +602,39 @@
       const name = prompt('請輸入你的家鄉名稱（例如：班巴利、清水村…）', Game.villageName);
       if(name){ Game.villageName = name.trim().slice(0,20); renderState(); saveAuto(); }
     };
+
+    // 延遲縮小腳部提示
+    const footer = $('#fixed-footer');
+    let isShrunk = false;
+
+    footer.onclick = () => {
+        if(isShrunk) {
+            footer.classList.remove('shrink');
+            isShrunk = false;
+        }
+    };
+    
+    $('#nextBtn').onclick = () => {
+      settleMonth();
+      if (isShrunk) {
+        footer.classList.remove('shrink');
+        isShrunk = false;
+      }
+    };
+    
+    $('#skipBtn').onclick = () => {
+      skipToSettle();
+      if (isShrunk) {
+        footer.classList.remove('shrink');
+        isShrunk = false;
+      }
+    };
+
+    // 10秒後自動縮小
+    setTimeout(() => {
+        footer.classList.add('shrink');
+        isShrunk = true;
+    }, 10000); // 10秒
 
     // 初始化
     (function init(){
