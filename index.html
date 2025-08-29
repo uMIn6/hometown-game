@@ -934,9 +934,9 @@ function settleMonth(skipWarnings=false){
   Game.metrics.maint = Math.max(0, Game.metrics.maint - 3);
   // 運行不足懲罰
   if(Game.metrics.maint < 3){
-    Game.trust = Math.max(0, Game.trust - 1);
-    Game.metrics.edu = Math.max(0, Game.metrics.edu - 1);
-    Game.metrics.health = Math.max(0, Game.metrics.health - 1);
+    Game.trust = Math.max(0, Game.trust - 0.1);
+    Game.metrics.edu = Math.max(0, Game.metrics.edu - 0.1);
+    Game.metrics.health = Math.max(0, Game.metrics.health - 0.1);
   }
   // 現金不足警示
   if(Game.money < 0 && !skipWarnings){
