@@ -153,12 +153,12 @@
 
       <div class="sticky-footer" id="footerBox">
         <div class="foot-grid">
-        <div class="mini muted">
-      提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。
+          <div class="mini muted">
+            提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。
+          </div>
+          <button class="btn" id="skipBtn">➡️ 禱告</button>
+          <button class="btn btn-acc" id="nextBtn">✅ 行動</button>
         </div>
-      <button class="btn" id="skipBtn">➡️ 禱告</button>
-      <button class="btn btn-acc" id="nextBtn">✅ 行動</button>
-  </div>
       </div>
     </main>
 
@@ -297,7 +297,7 @@
         id:"solarFarm", name:"☀️ 小型太陽能農場", cost: 120000, monthlyUpkeep: 3000,
         effects:{ trust:+3, maint:+2, jobs:+2 }, longTerm:"生產再生能源，改善環境與就業"
       }
-    );
+    ];
 
     // 隨機事件池
     const EVENTS = [
@@ -418,16 +418,6 @@
       return ({edu:'教育',health:'醫療',water:'用水',jobs:'就業',sports:'體育',maint:'運行',trust:'信任'})[k]||k;
     }
 
-    function buildProject(p){
-      if(Game.money < p.cost) return;
-      Game.money -= p.cost;
-      Game.projects.push({...p, builtAt:{year:Game.year, month:Game.month}});
-      // 即時信任微增（透明度）
-      Game.trust = Math.min(100, Game.trust + (p.effects.trust?Math.max(1,p.effects.trust):1));
-      renderState(); renderProjects();
-      toast(`已建置：${p.name}，家鄉看見了你的行動 💚`);
-    }
-
     // 事件生成與渲染
     function drawEvents(){
       const box = $('#eventList');
@@ -465,6 +455,16 @@
     function disableCard(card){
       [...card.querySelectorAll('button')].forEach(b=>{b.disabled=true; b.classList.add('btn-ghost')});
       const note = document.createElement('div'); note.className='muted mini'; note.textContent='已選擇'; card.appendChild(document.createElement('br')); card.appendChild(note);
+    }
+
+    function buildProject(p){
+      if(Game.money < p.cost) return;
+      Game.money -= p.cost;
+      Game.projects.push({...p, builtAt:{year:Game.year, month:Game.month}});
+      // 即時信任微增（透明度）
+      Game.trust = Math.min(100, Game.trust + (p.effects.trust?Math.max(1,p.effects.trust):1));
+      renderState(); renderProjects();
+      toast(`已建置：${p.name}，家鄉看見了你的行動 💚`);
     }
 
     // 月結算
