@@ -429,8 +429,17 @@
       
       // 社群信任長條圖
       const trustBar = $('#trustBar');
-      const trustColor = Game.trust > 50 ? `#34d399` : `#71717a`;
-      const trustBgColor = Game.trust > 50 ? `#15803d` : `#3f3f46`;
+      let trustColor, trustBgColor;
+      if (Game.trust >= 100) {
+        trustColor = '#fcd34d'; // 淡黃色光芒
+        trustBgColor = '#f59e0b';
+      } else if (Game.trust > 50) {
+        trustColor = '#34d399'; // 藍綠色
+        trustBgColor = '#15803d';
+      } else {
+        trustColor = '#71717a'; // 灰色
+        trustBgColor = '#3f3f46';
+      }
       trustBar.style.width = Game.trust + '%';
       trustBar.style.background = `linear-gradient(90deg, ${trustBgColor}, ${trustColor})`;
       
