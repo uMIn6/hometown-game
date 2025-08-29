@@ -458,7 +458,7 @@
   text: "社區的主要水井出現污染嫌疑，居民開始抱怨飲用水品質。",
   choices: [
     {
-      label: "投資淨水系統：花費$8,000，水指標+10，maint+3",
+      label: "投資淨水系統：花費$8,000，水指標+10，運行+3",
       apply: s => {
         s.money -= 8000;
         s.metrics.water = clamp(s.metrics.water + 10, 0, 100);
@@ -466,7 +466,7 @@
       }
     },
     {
-      label: "推廣節水教育：花費$1,500，水指標+4，trust+3",
+      label: "推廣節水教育：花費$1,500，水指標+4，信任+3",
       apply: s => {
         s.money -= 1500;
         s.metrics.water = clamp(s.metrics.water + 4, 0, 100);
@@ -474,7 +474,7 @@
       }
     },
     {
-      label: "不作為：無花費，水指標-6，trust-5",
+      label: "不作為：無花費，水指標-6，信任-5",
       apply: s => {
         s.metrics.water = Math.max(0, s.metrics.water - 6);
         s.trust = Math.max(0, s.trust - 5);
@@ -489,7 +489,7 @@
   text: "當地小學請求協助翻新教室，孩子們期待更好的學習環境。",
   choices: [
     {
-      label: "全額贊助：花費$10,000，教育+12，trust+5",
+      label: "全額贊助：花費$10,000，教育+12，信任+5",
       apply: s => {
         s.money -= 10000;
         s.metrics.edu = clamp(s.metrics.edu + 12, 0, 100);
@@ -497,7 +497,7 @@
       }
     },
     {
-      label: "尋求企業贊助：花費$2,000，jobs+3，教育+6，maint+2",
+      label: "尋求企業贊助：花費$2,000，就業+3，教育+6，運行+2",
       apply: s => {
         s.money -= 2000;
         s.metrics.jobs = clamp(s.metrics.jobs + 3, 0, 100);
@@ -506,7 +506,7 @@
       }
     },
     {
-      label: "將提案擱置：trust-4，教育-3",
+      label: "將提案擱置：信任-4，教育-3",
       apply: s => {
         s.trust = Math.max(0, s.trust - 4);
         s.metrics.edu = Math.max(0, s.metrics.edu - 3);
@@ -521,7 +521,7 @@
   text: "隔壁村想舉辦地區運動會，邀請你的社區參與並承辦部分賽事。",
   choices: [
     {
-      label: "承辦開幕儀式：花費$7,000，sports+10，trust+4，maint+5",
+      label: "承辦開幕儀式：花費$7,000，體育+10，信任+4，運行+5",
       apply: s => {
         s.money -= 7000;
         s.metrics.sports = clamp(s.metrics.sports + 10, 0, 100);
@@ -530,7 +530,7 @@
       }
     },
     {
-      label: "只派隊參加：花費$1,200，sports+5，trust+2",
+      label: "只派隊參加：花費$1,200，體育+5，信任+2",
       apply: s => {
         s.money -= 1200;
         s.metrics.sports = clamp(s.metrics.sports + 5, 0, 100);
@@ -538,7 +538,7 @@
       }
     },
     {
-      label: "婉拒邀請：trust-3",
+      label: "婉拒邀請：信任-3",
       apply: s => {
         s.trust = Math.max(0, s.trust - 3);
       }
@@ -552,7 +552,7 @@
   text: "公共衛生組織提供免費健康檢測，但需派員協助場地與後勤。",
   choices: [
     {
-      label: "提供場地支援：花費$3,000，health+8，trust+3",
+      label: "提供場地支援：花費$3,000，醫療+8，信任+3",
       apply: s => {
         s.money -= 3000;
         s.metrics.health = clamp(s.metrics.health + 8, 0, 100);
@@ -560,14 +560,14 @@
       }
     },
     {
-      label: "只派志願者：health+4，trust+2",
+      label: "只派志願者：醫療+4，信任+2",
       apply: s => {
         s.metrics.health = clamp(s.metrics.health + 4, 0, 100);
         s.trust = clamp(s.trust + 2, 0, 100);
       }
     },
     {
-      label: "拒絕合作：health-5，trust-4",
+      label: "拒絕合作：醫療-5，信任-4",
       apply: s => {
         s.metrics.health = Math.max(0, s.metrics.health - 5);
         s.trust = Math.max(0, s.trust - 4);
@@ -582,7 +582,7 @@
   text: "國際基金會提供綠能補助，你可以申請太陽能板或節能街燈。",
   choices: [
     {
-      label: "裝設太陽能板：花費$12,000，water+5，maint+6，trust+5",
+      label: "裝設太陽能板：花費$12,000，用水+5，運行+6，信任+5",
       apply: s => {
         s.money -= 12000;
         s.metrics.water = clamp(s.metrics.water + 5, 0, 100);
@@ -591,7 +591,7 @@
       }
     },
     {
-      label: "換成節能街燈：花費$6,000，maint+4，trust+3",
+      label: "換成節能街燈：花費$6,000，運行+4，信任+3",
       apply: s => {
         s.money -= 6000;
         s.metrics.maint = clamp(s.metrics.maint + 4, 0, 100);
@@ -599,7 +599,7 @@
       }
     },
     {
-      label: "放棄申請：trust-2",
+      label: "放棄申請：信任-2",
       apply: s => {
         s.trust = Math.max(0, s.trust - 2);
       }
