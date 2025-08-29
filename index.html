@@ -605,6 +605,156 @@
       }
     }
   ]
+},
+// 1. 臨時停電
+{
+  id: "powerOutage",
+  text: "社區突發短暫停電，居民抱怨家用電器可能受損。",
+  choices: [
+    {
+      label: "提供臨時照明與小額補助：花費$800，醫療+3，信任+4",
+      apply: s => {
+        s.money -= 800;
+        s.metrics.health = clamp(s.metrics.health + 3, 0, 100);
+        s.trust = clamp(s.trust + 4, 0, 100);
+      }
+    },
+    {
+      label: "申請緊急維修隊：花費$1,200，運行+6，信任+2",
+      apply: s => {
+        s.money -= 1200;
+        s.metrics.maint = clamp(s.metrics.maint + 6, 0, 100);
+        s.trust = clamp(s.trust + 2, 0, 100);
+      }
+    },
+    {
+      label: "讓居民自理：信任-5",
+      apply: s => {
+        s.trust = Math.max(0, s.trust - 5);
+      }
+    }
+  ]
+},
+
+// 2. 路面坑洞
+{
+  id: "roadPothole",
+  text: "主要道路出現坑洞，行人和車輛都容易受損。",
+  choices: [
+    {
+      label: "緊急修補：花費$1,500，運行+5，信任+4",
+      apply: s => {
+        s.money -= 1500;
+        s.metrics.maint = clamp(s.metrics.maint + 5, 0, 100);
+        s.trust = clamp(s.trust + 4, 0, 100);
+      }
+    },
+    {
+      label: "排程例行維修：花費$500，運行+2",
+      apply: s => {
+        s.money -= 500;
+        s.metrics.maint = clamp(s.metrics.maint + 2, 0, 100);
+      }
+    },
+    {
+      label: "忽視不理：運行-4，信任-3",
+      apply: s => {
+        s.metrics.maint = Math.max(0, s.metrics.maint - 4);
+        s.trust = Math.max(0, s.trust - 3);
+      }
+    }
+  ]
+},
+
+// 3. 社區流浪犬
+{
+  id: "strayDog",
+  text: "社區出現流浪犬，部分居民擔心安全與衛生問題。",
+  choices: [
+    {
+      label: "成立臨時收容中心：花費$1,000，醫療+4，信任+5",
+      apply: s => {
+        s.money -= 1000;
+        s.metrics.health = clamp(s.metrics.health + 4, 0, 100);
+        s.trust = clamp(s.trust + 5, 0, 100);
+      }
+    },
+    {
+      label: "鼓勵居民認養：醫療+2，信任+3",
+      apply: s => {
+        s.metrics.health = clamp(s.metrics.health + 2, 0, 100);
+        s.trust = clamp(s.trust + 3, 0, 100);
+      }
+    },
+    {
+      label: "不理會：醫療-3，信任-4",
+      apply: s => {
+        s.metrics.health = Math.max(0, s.metrics.health - 3);
+        s.trust = Math.max(0, s.trust - 4);
+      }
+    }
+  ]
+},
+
+// 4. 鄰里噪音投訴
+{
+  id: "noiseComplaint",
+  text: "夜晚聚會音量過大，附近居民投訴不斷上門。",
+  choices: [
+    {
+      label: "協助協調降噪：花費$200，信任+4，運行+1",
+      apply: s => {
+        s.money -= 200;
+        s.trust = clamp(s.trust + 4, 0, 100);
+        s.metrics.maint = clamp(s.metrics.maint + 1, 0, 100);
+      }
+    },
+    {
+      label: "發布社區安寧守則：花費$100，信任+2，運行+2",
+      apply: s => {
+        s.money -= 100;
+        s.trust = clamp(s.trust + 2, 0, 100);
+        s.metrics.maint = clamp(s.metrics.maint + 2, 0, 100);
+      }
+    },
+    {
+      label: "不採取行動：信任-3",
+      apply: s => {
+        s.trust = Math.max(0, s.trust - 3);
+      }
+    }
+  ]
+},
+
+// 5. 小型義賣市集
+{
+  id: "communityBazaar",
+  text: "居民提議在廣場舉辦義賣市集，募集資金改善社區設施。",
+  choices: [
+    {
+      label: "主辦義賣：花費$2,000，募款$3,000，信任+6，運行+2",
+      apply: s => {
+        s.money -= 2000;
+        s.money = clamp(s.money + 3000, 0, Infinity);
+        s.trust = clamp(s.trust + 6, 0, 100);
+        s.metrics.maint = clamp(s.metrics.maint + 2, 0, 100);
+      }
+    },
+    {
+      label: "僅資助攤位：花費$500，募款$800，信任+3",
+      apply: s => {
+        s.money -= 500;
+        s.money = clamp(s.money + 800, 0, Infinity);
+        s.trust = clamp(s.trust + 3, 0, 100);
+      }
+    },
+    {
+      label: "錯過機會：信任-4",
+      apply: s => {
+        s.trust = Math.max(0, s.trust - 4);
+      }
+    }
+  ]
 }
     ];
 
