@@ -59,15 +59,17 @@
     .foot-grid{display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center}
 
     .mini{font-size:12px}
+    .floating-btn {position: fixed;right: 12px;bottom: 12px;z-index: 1000;padding: 10px 14px;background: linear-gradient(180deg,#12325a 0%,#0d2545 100%);
+    border: 1px solid #1e3a5f;border-radius: 12px;color: #e5e7eb;font-weight: 600;cursor: pointer;box-shadow: 0 4px 12px rgba(0,0,0,.4);}
+    .floating-btn:hover { filter: brightness(1.1); }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- 左：總覽 -->
     <aside class="panel stack">
       <div>
         <h1>🏡 希望旅程</h1>
-        <div class="sub">塞內加爾球星 Sadio Mané 的人生故事感動了我，我也希望有機會可以讓許多人經歷到這樣的見證 ~在球場外，為家鄉創造長久的改變。</div>
+        <div class="sub">塞內加爾球星 Sadio Mané 的人生故事，見證 ~在球場外，為家鄉創造希望的力量，你也可以做到。</div>
       </div>
 
       <div class="kpi">
@@ -102,7 +104,7 @@
       </div>
 
       <div class="card">
-        <div class="label">我們所看見的需要</div>
+        <div class="label">所見的需要</div>
         <div class="statrow">
           <div>
             教育
@@ -132,39 +134,41 @@
       </div>
 
       <div class="row">
-        <button class="btn btn-ghost" id="saveBtn">💾 休息一下</button>
+        <button class="btn btn-ghost" id="saveBtn">💾 主動休息</button>
         <button class="btn btn-ghost" id="loadBtn">📂 載入</button>
         <button class="btn btn-warn" id="resetBtn">🗑️ 遊戲可重來</button>
       </div>
     </aside>
 
-    <!-- 中：情境 / 事件卡 -->
     <main class="panel">
       <div class="row" style="justify-content:space-between; align-items:flex-end">
         <div>
           <h1>📜 本月事件</h1>
-          <div class="sub">根據事件做抉擇，平衡長短期影響與財務。</div>
+          <div class="sub">根據事件做抉擇，你的決定影響著所看見的需要與財務。</div>
         </div>
         <div class="pill" id="villageTag">🏘️ 家鄉：未命名</div>
       </div>
 
       <div class="cards" id="eventList" aria-live="polite"></div>
 
-      <div class="sticky-footer">
+      <div class="sticky-footer" id="footerBox">
         <div class="foot-grid">
-          <div class="mini muted">提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。</div>
-          <button class="btn" id="skipBtn">➡️ 跳到結算</button>
-          <button class="btn btn-acc" id="nextBtn">✅ 結算本月</button>
+        <div class="mini muted">
+      提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。
         </div>
+      <button class="btn" id="skipBtn">➡️ 禱告</button>
+      <button class="btn btn-acc" id="nextBtn">✅ 行動</button>
+  </div>
       </div>
     </main>
 
-    <!-- 右：專案資源庫 -->
+    <button id="toggleFooter" class="floating-btn" style="display:none;">📌 行動</button>
+
     <aside class="panel right stack">
       <div class="row" style="justify-content:space-between; align-items:flex-end">
         <div>
           <h1>🧭 專案選單</h1>
-          <div class="sub">選擇要投資的在地專案（可重複建置不同地點）。</div>
+          <div class="sub">選擇想行動的在地專案（可重複建置在各地）。</div>
         </div>
         <button class="btn" id="renameBtn">✏️ 設定家鄉名稱</button>
       </div>
@@ -178,8 +182,8 @@
     const Game = {
       month: 1,
       year: 1,
-      money: 120000, // 初始資金
-      baseIncome: 80000, // 每月職涯收入（可想像為合約與代言）
+      money: 1, // 初始資金
+      baseIncome: 20000, // 每月職涯收入（可想像為合約與代言）
       trust: 50, // 0-100
       metrics: { edu:20, health:20, water:20, jobs:20, sports:20, maint:50 }, // 0-100
       villageName: "未命名",
@@ -213,7 +217,87 @@
         id:"solar", name:"🔆 太陽能路燈", cost: 40000, monthlyUpkeep: 1000,
         effects:{ trust:+2, jobs:+1, maint:+1 }, longTerm:"提高夜間安全與活動"
       },
-    ];
+      {
+        id:"communityMeal", name:"🍲 社區免費餐會", cost: 20000, monthlyUpkeep: 3000,
+        effects:{ trust:+8, maint:+2 }, longTerm:"提供弱勢餐食，增進社群關係"
+      },
+      {
+        id:"youthClub", name:"🏀 青少年週末活動", cost: 30000, monthlyUpkeep: 2000,
+        effects:{ edu:+5, sports:+4, trust:+4 }, longTerm:"帶領青少年正向活動，建立信任"
+      },
+      {
+        id:"elderVisit", name:"👵 長者關懷探訪", cost: 15000, monthlyUpkeep: 1000,
+        effects:{ trust:+6, maint:+1 }, longTerm:"探訪長者，傳遞關懷與陪伴"
+      },
+      {
+        id:"afterSchool", name:"📚 放學輔導班", cost: 40000, monthlyUpkeep: 2500,
+        effects:{ edu:+8, trust:+3 }, longTerm:"輔導弱勢學生，提升學習與信任"
+      },
+      {
+        id:"healthCheck", name:"🩺 社區健康檢查", cost: 50000, monthlyUpkeep: 3000,
+        effects:{ health:+8, trust:+4 }, longTerm:"提供基本健康檢查，增強社群健康意識"
+      },
+      {
+        id:"musicMinistry", name:"🎵 社區音樂服事", cost: 10000, monthlyUpkeep: 500,
+        effects:{ trust:+3, edu:+2 }, longTerm:"透過音樂帶來祝福與社群凝聚"
+      },
+      {
+        id:"workshopSkills", name:"🛠️ 社區技能工作坊", cost: 35000, monthlyUpkeep: 2000,
+        effects:{ jobs:+5, edu:+4, trust:+3 }, longTerm:"教導生活與工作技能，提升自立能力"
+      },
+      {
+        id:"cleanUpDay", name:"🧹 社區清潔日", cost: 10000, monthlyUpkeep: 500,
+        effects:{ maint:+5, trust:+2 }, longTerm:"組織社區清潔活動，改善居住環境"
+      },
+      {
+        id:"charityDrive", name:"🎁 社區物資捐贈", cost: 25000, monthlyUpkeep: 1000,
+        effects:{ trust:+6, maint:+1 }, longTerm:"收集與分發物資給有需要的人"
+      },
+      {
+        id:"storyTime", name:"📖 社區親子說故事", cost: 8000, monthlyUpkeep: 500,
+        effects:{ edu:+3, trust:+3 }, longTerm:"透過親子故事活動建立良好社區互動"
+      },
+      {
+        id:"streetArt", name:"🎨 街頭藝術計畫", cost: 40000, monthlyUpkeep: 500,
+        effects:{ trust:+5, edu:+2 }, longTerm:"美化社區環境，吸引觀光與創意人才"
+      },
+      {
+        id:"recycleHub", name:"♻️ 社區資源回收中心", cost: 50000, monthlyUpkeep: 1000,
+        effects:{ maint:+3, trust:+2 }, longTerm:"提升環保意識，減少浪費"
+      },
+      {
+        id:"techLab", name:"💻 創客實驗室", cost: 90000, monthlyUpkeep: 2500,
+        effects:{ edu:+8, jobs:+5, trust:+3 }, longTerm:"培養科技技能與創業能力"
+      },
+      {
+        id:"elderCare", name:"👵 長者關懷中心", cost: 80000, monthlyUpkeep: 1500,
+        effects:{ trust:+6, maint:+1 }, longTerm:"提升社區關懷與老人福祉"
+      },
+      {
+        id:"urbanGarden", name:"🌿 都市共享花園", cost: 30000, monthlyUpkeep: 500,
+        effects:{ edu:+2, trust:+3, maint:+2 }, longTerm:"改善城市綠化與社群互動"
+      },
+      {
+        id:"culturalFest", name:"🎭 社區文化節", cost: 60000, monthlyUpkeep: 2000,
+        effects:{ trust:+8, edu:+2 }, longTerm:"促進文化交流與社群凝聚"
+      },
+      {
+        id:"bikeLane", name:"🚴 安全自行車道", cost: 70000, monthlyUpkeep: 1500,
+        effects:{ maint:+4, trust:+3 }, longTerm:"鼓勵低碳運輸與健康生活"
+      },
+      {
+        id:"emergencyKit", name:"🧰 災害應變物資庫", cost: 50000, monthlyUpkeep: 1000,
+        effects:{ maint:+5, trust:+2 }, longTerm:"提升社區韌性與緊急應變能力"
+      },
+      {
+        id:"startupFund", name:"🚀 青年創業基金", cost: 100000, monthlyUpkeep: 0,
+        effects:{ jobs:+10, trust:+4 }, longTerm:"支持年輕創業者，刺激經濟活力"
+      },
+      {
+        id:"solarFarm", name:"☀️ 小型太陽能農場", cost: 120000, monthlyUpkeep: 3000,
+        effects:{ trust:+3, maint:+2, jobs:+2 }, longTerm:"生產再生能源，改善環境與就業"
+      }
+    );
 
     // 隨機事件池
     const EVENTS = [
@@ -286,14 +370,18 @@
     function renderProjects(){
       const box = $('#projectList');
       box.innerHTML = '';
+      
+      // 從全部專案中隨機選取 6 個
+      const shuffledCatalog = [...PROJECT_CATALOG].sort(() => 0.5 - Math.random());
+      const projectsToShow = shuffledCatalog.slice(0, 6);
 
-      PROJECT_CATALOG.forEach(p=>{
+      projectsToShow.forEach(p=>{
         const el = document.createElement('div');
         el.className = 'card project';
         el.innerHTML = `
           <div>
             <h3>${p.name}</h3>
-            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月運行：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
+            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維護支出：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
             <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
               ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
             </div>
@@ -347,7 +435,7 @@
       pool.forEach(e=>{
         const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = `<h3>事件：${emojiFor(e.id)} ${e.text}</h3>`;
+        card.innerHTML = `<h3>：${emojiFor(e.id)} ${e.text}</h3>`;
         e.choices.forEach(c=>{
           const btn = document.createElement('button');
           btn.className='btn'; btn.textContent=c.label;
@@ -386,6 +474,8 @@
         Game.metrics.edu = Math.max(0, Game.metrics.edu - 2);
         Game.metrics.health = Math.max(0, Game.metrics.health - 2);
       }
+      // ⚠️ 新增這行：正常結算 → 扣運行 10
+      Game.metrics.maint = Math.max(0, Game.metrics.maint - 10);
       // 現金不足警示
       if(Game.money < 0 && !skipWarnings){
         alert('注意：現金流為負！請增加收入或減少新建專案。');
@@ -398,8 +488,61 @@
       saveAuto();
     }
     function skipToSettle(){
-      toast('你選擇跳過事件，直接進入結算');
-      settleMonth(true);
+      let roll = Math.floor(Math.random() * 10); // 0~9
+      let finalIncome;
+      switch(roll){
+        case 0: // 10%
+          finalIncome = 0;  
+          Game.baseIncome += 9999; // 永久加職涯月收入
+          toast('✨ 感恩！你的職涯月收入永久增加 +9999 ✨');
+          break;
+        case 1:  
+          finalIncome = Game.baseIncome / 20;
+          break;
+        case 2:  
+          finalIncome = Game.baseIncome / 10;
+          break;
+        case 3:  
+          finalIncome = Game.baseIncome / 6;
+          break;
+        case 4:  
+          finalIncome = Game.baseIncome / 7;
+          break;
+        case 5:  
+          finalIncome = Game.baseIncome / 11;
+          break;
+        case 6:  
+          finalIncome = Game.baseIncome / 12;
+          break;
+        case 7:  
+          finalIncome = Game.baseIncome / 15;
+          break;
+        case 8:  
+          finalIncome = Game.baseIncome / 17;
+          break;
+        case 9:  
+          finalIncome = Game.baseIncome / 18;
+          break;
+      }
+      // 取整數，避免小數點
+      finalIncome = Math.floor(finalIncome);
+
+      Game.money += finalIncome;
+
+      if (roll !== 0) {
+        toast(`➡️ 你選擇禱告，本月收入為 ${finalIncome}（隨機結果）`);
+      }
+      // 不扣運行、不算 upkeep，只推進時間
+      Game.month++;  
+      if(Game.month > 12){  
+        Game.month = 1;  
+        Game.year++;  
+      }
+
+      renderState();  
+      renderProjects();  
+      drawEvents();
+      saveAuto();
     }
 
     // 儲存 / 載入
@@ -445,7 +588,7 @@
     (function init(){
       renderState(); renderProjects(); drawEvents();
       // 初始提示
-      setTimeout(()=>toast('提示：先從「深水井」或「小學翻修」開始，逐步建立信任'), 600);
+      setTimeout(()=>toast('提示：禱告很重要，你要安靜你的心，凡事感恩會使你增強心理健康，如提升幸福感、減輕焦慮與抑鬱'), 600);
     })();
   </script>
 </body>
