@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>公益家鄉：以愛建村</title>
+  <title>希望旅程</title>
   <style>
     :root{
       --bg:#0f172a;        /* slate-900 */
@@ -66,8 +66,8 @@
     <!-- 左：總覽 -->
     <aside class="panel stack">
       <div>
-        <h1>🏡 公益家鄉：以愛建村</h1>
-        <div class="sub">在球場外，為家鄉創造長久的改變。</div>
+        <h1>🏡 希望旅程</h1>
+        <div class="sub">塞內加爾球星 Sadio Mané 的人生故事感動了我，我也希望有機會可以讓許多人經歷到這樣的見證 ~在球場外，為家鄉創造長久的改變。</div>
       </div>
 
       <div class="kpi">
@@ -92,7 +92,7 @@
       <div class="card">
         <div class="row" style="justify-content:space-between">
           <div>
-            <div class="label">整體影響力</div>
+            <div class="label">再前進一點</div>
             <div class="progress" aria-label="影響力進度">
               <div class="bar" id="impactBar"></div>
             </div>
@@ -102,7 +102,7 @@
       </div>
 
       <div class="card">
-        <div class="label">影響指標</div>
+        <div class="label">我們所看見的需要</div>
         <div class="statrow">
           <div>
             教育
@@ -125,7 +125,7 @@
             <div class="meter"><span id="sportsMeter" style="width:20%"></span></div>
           </div>
           <div>
-            維運
+            運行
             <div class="meter"><span id="maintMeter" style="width:50%"></span></div>
           </div>
         </div>
@@ -152,7 +152,7 @@
 
       <div class="sticky-footer">
         <div class="foot-grid">
-          <div class="mini muted">提示：每個月會自動結算維運成本與帶來的長期收益。社群信任會影響募資與志工參與。</div>
+          <div class="mini muted">提示：每個月會自動結算運行成本與帶來的長期收益。社群信任會影響募資與志工參與。</div>
           <button class="btn" id="skipBtn">➡️ 跳到結算</button>
           <button class="btn btn-acc" id="nextBtn">✅ 結算本月</button>
         </div>
@@ -227,17 +227,17 @@
       },
       {
         id:"flood",
-        text:"暴雨造成道路受損，若立即修補可避免維運惡化。",
+        text:"暴雨造成道路受損，若立即修補可避免運行惡化。",
         choices:[
-          {label:"緊急修補：花$20,000，維運+6", apply:s=>{s.money-=20000; s.metrics.maint=Math.min(100,s.metrics.maint+6)}},
-          {label:"暫緩：省錢但維運-6", apply:s=>{s.metrics.maint=Math.max(0,s.metrics.maint-6)}}
+          {label:"緊急修補：花$20,000，運行+6", apply:s=>{s.money-=20000; s.metrics.maint=Math.min(100,s.metrics.maint+6)}},
+          {label:"暫緩：省錢但運行-6", apply:s=>{s.metrics.maint=Math.max(0,s.metrics.maint-6)}}
         ]
       },
       {
         id:"sponsor",
-        text:"品牌邀請公益聯名，若參與可增加月收入但需每月投入志工時數（降低維運壓力）。",
+        text:"品牌邀請公益聯名，若參與可增加月收入但需每月投入志工時數（降低運行壓力）。",
         choices:[
-          {label:"參與：月收入+$10,000，維運+2", apply:s=>{s.baseIncome+=10000; s.metrics.maint=Math.min(100,s.metrics.maint+2)}},
+          {label:"參與：月收入+$10,000，運行+2", apply:s=>{s.baseIncome+=10000; s.metrics.maint=Math.min(100,s.metrics.maint+2)}},
           {label:"不參與：保持現狀", apply:s=>{}}
         ]
       },
@@ -293,7 +293,7 @@
         el.innerHTML = `
           <div>
             <h3>${p.name}</h3>
-            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維運：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
+            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月運行：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
             <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
               ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
             </div>
@@ -311,14 +311,14 @@
       if(Game.projects.length){
         const list = document.createElement('div');
         list.className='card';
-        list.innerHTML = `<h3>已建置與維運</h3>`;
+        list.innerHTML = `<h3>已建置與運行</h3>`;
         Game.projects.forEach((proj,i)=>{
           const row = document.createElement('div');
           row.className='row';
           row.style.justifyContent='space-between';
           row.style.marginTop='6px';
           row.innerHTML = `<div class="mini">${proj.name} <span class="muted">（第${proj.builtAt.year}年${proj.builtAt.month}月）</span></div>
-                           <div class="pill mini">維運：${fmt(proj.monthlyUpkeep)}</div>`;
+                           <div class="pill mini">運行：${fmt(proj.monthlyUpkeep)}</div>`;
           list.appendChild(row);
         })
         box.appendChild(list);
@@ -326,7 +326,7 @@
     }
 
     function labelOf(k){
-      return ({edu:'教育',health:'醫療',water:'用水',jobs:'就業',sports:'體育',maint:'維運',trust:'信任'})[k]||k;
+      return ({edu:'教育',health:'醫療',water:'用水',jobs:'就業',sports:'體育',maint:'運行',trust:'信任'})[k]||k;
     }
 
     function buildProject(p){
@@ -370,7 +370,7 @@
     function settleMonth(skipWarnings=false){
       // 收入
       Game.money += Game.baseIncome;
-      // 專案維運成本
+      // 專案運行成本
       const upkeep = Game.projects.reduce((a,p)=>a+p.monthlyUpkeep,0);
       Game.money -= upkeep;
       // 長期效果疊加
@@ -380,7 +380,7 @@
           else { Game.metrics[k] = clamp(Game.metrics[k] + v*0.5, 0, 100); }
         }
       });
-      // 維運不足懲罰
+      // 運行不足懲罰
       if(Game.metrics.maint < 30){
         Game.trust = Math.max(0, Game.trust - 4);
         Game.metrics.edu = Math.max(0, Game.metrics.edu - 2);
