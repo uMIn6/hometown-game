@@ -603,38 +603,43 @@
     }
 
     // 月結算
-    function settleMonth(skipWarnings=false){
-      // 收入
-      Game.money += Game.baseIncome;
-      // 專案運行成本
-      const upkeep = Game.projects.reduce((a,p)=>a+p.monthlyUpkeep,0);
-      Game.money -= upkeep;
-      // 長期效果疊加
-      Game.projects.forEach(p=>{
-        for(const [k,v] of Object.entries(p.effects)){
-          if(k==='trust'){ Game.trust = clamp(Game.trust + v*0.2,0,100); }
-          else { Game.metrics[k] = clamp(Game.metrics[k] + v*0.5, 0, 100); }
-        }
-      });
-      // 運行不足懲罰
-      if(Game.metrics.maint < 30){
-        Game.trust = Math.max(0, Game.trust - 4);
-        Game.metrics.edu = Math.max(0, Game.metrics.edu - 2);
-        Game.metrics.health = Math.max(0, Game.metrics.health - 2);
-      }
-      // 正常結算 → 扣運行 10
-      Game.metrics.maint = Math.max(0, Game.metrics.maint - 10);
-      // 現金不足警示
-      if(Game.money < 0 && !skipWarnings){
-        alert('注意：現金流為負！請增加收入或減少新建專案。');
-      }
+function settleMonth(skipWarnings=false){
+  // 計算本月淨收入
+  const upkeep = Game.projects.reduce((a,p)=>a+p.monthlyUpkeep,0);
+  const netIncome = Game.baseIncome - upkeep;
 
-      // 時間遞進
-      Game.month++; if(Game.month>12){ Game.month=1; Game.year++; }
-      renderState(); renderProjects(); drawEvents();
-      toast('已結算本月：收入與維運已體現在指標');
-      saveAuto();
+  // 收入
+  Game.money += netIncome;
+  
+  // 更新收入顯示，讓它顯示淨收入
+  $('#income').textContent = fmt(netIncome);
+
+  // 長期效果疊加
+  Game.projects.forEach(p=>{
+    for(const [k,v] of Object.entries(p.effects)){
+      if(k==='trust'){ Game.trust = clamp(Game.trust + v*0.2,0,100); }
+      else { Game.metrics[k] = clamp(Game.metrics[k] + v*0.5, 0, 100); }
     }
+  });
+  // 運行不足懲罰
+  if(Game.metrics.maint < 30){
+    Game.trust = Math.max(0, Game.trust - 4);
+    Game.metrics.edu = Math.max(0, Game.metrics.edu - 2);
+    Game.metrics.health = Math.max(0, Game.metrics.health - 2);
+  }
+  // 正常結算 → 扣運行 10
+  Game.metrics.maint = Math.max(0, Game.metrics.maint - 10);
+  // 現金不足警示
+  if(Game.money < 0 && !skipWarnings){
+    alert('注意：現金流為負！請增加收入或減少新建專案。');
+  }
+
+  // 時間遞進
+  Game.month++; if(Game.month>12){ Game.month=1; Game.year++; }
+  renderState(); renderProjects(); drawEvents();
+  toast('已結算本月：收入與維運已體現在指標');
+  saveAuto();
+}
     function skipToSettle(){
       let roll = Math.floor(Math.random() * 100) + 1; // 1~100
       let finalIncome;
