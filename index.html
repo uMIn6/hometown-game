@@ -289,7 +289,7 @@
         effects:{ sports:+10, edu:+2, jobs:+1, maint:-1 }, longTerm:"以運動帶動向上與凝聚"
       },
       {
-        id:"micro", name:"💼 微型創業基金", cost: 50000, monthlyUpkeep: 0,
+        id:"micro", name:"💼 微型創業基金", cost: 50000, monthlyUpkeep: 2000,
         effects:{ jobs:+8, trust:+3 }, longTerm:"支持小店與家庭生計"
       },
       {
@@ -317,15 +317,15 @@
         effects:{ health:+8, trust:+4 }, longTerm:"提供基本健康檢查，增強社群健康意識"
       },
       {
-        id:"musicMinistry", name:"🎵 社區音樂服事", cost: 3000, monthlyUpkeep: 500,
+        id:"musicMinistry", name:"🎵 社區音樂服事", cost: 3000, monthlyUpkeep: 1000,
         effects:{ trust:+3, edu:+2 }, longTerm:"透過音樂帶來祝福與社群凝聚"
       },
       {
-        id:"workshopSkills", name:"🛠️ 社區技能工作坊", cost: 35000, monthlyUpkeep: 2000,
+        id:"workshopSkills", name:"🛠️ 社區技能工作坊", cost: 35000, monthlyUpkeep: 3000,
         effects:{ jobs:+5, edu:+4, trust:+3 }, longTerm:"教導生活與工作技能，提升自立能力"
       },
       {
-        id:"cleanUpDay", name:"🧹 社區清潔日", cost: 5000, monthlyUpkeep: 500,
+        id:"cleanUpDay", name:"🧹 社區清潔日", cost: 5000, monthlyUpkeep: 1000,
         effects:{ maint:+5, trust:+2 }, longTerm:"組織社區清潔活動，改善居住環境"
       },
       {
@@ -333,11 +333,11 @@
         effects:{ trust:+6, maint:+1 }, longTerm:"收集與分發物資給有需要的人"
       },
       {
-        id:"storyTime", name:"📖 社區親子說故事", cost: 8000, monthlyUpkeep: 500,
+        id:"storyTime", name:"📖 社區親子說故事", cost: 8000, monthlyUpkeep: 700,
         effects:{ edu:+3, trust:+3 }, longTerm:"透過親子故事活動建立良好社區互動"
       },
       {
-        id:"streetArt", name:"🎨 街頭藝術計畫", cost: 40000, monthlyUpkeep: 500,
+        id:"streetArt", name:"🎨 街頭藝術計畫", cost: 40000, monthlyUpkeep: 2000,
         effects:{ trust:+5, edu:+2 }, longTerm:"美化社區環境，吸引觀光與創意人才"
       },
       {
@@ -353,7 +353,7 @@
         effects:{ trust:+6, maint:+1 }, longTerm:"提升社區關懷與老人福祉"
       },
       {
-        id:"urbanGarden", name:"🌿 都市共享花園", cost: 30000, monthlyUpkeep: 500,
+        id:"urbanGarden", name:"🌿 都市共享花園", cost: 30000, monthlyUpkeep: 1000,
         effects:{ edu:+2, trust:+3, maint:+2 }, longTerm:"改善城市綠化與社群互動"
       },
       {
@@ -361,15 +361,15 @@
         effects:{ trust:+8, edu:+2 }, longTerm:"促進文化交流與社群凝聚"
       },
       {
-        id:"bikeLane", name:"🚴 安全自行車道", cost: 70000, monthlyUpkeep: 1500,
+        id:"bikeLane", name:"🚴 安全自行車道", cost: 70000, monthlyUpkeep: 3000,
         effects:{ maint:+4, trust:+3 }, longTerm:"鼓勵低碳運輸與健康生活"
       },
       {
-        id:"emergencyKit", name:"🧰 災害應變物資庫", cost: 50000, monthlyUpkeep: 1000,
+        id:"emergencyKit", name:"🧰 災害應變物資庫", cost: 50000, monthlyUpkeep: 10000,
         effects:{ maint:+5, trust:+2 }, longTerm:"提升社區韌性與緊急應變能力"
       },
       {
-        id:"startupFund", name:"🚀 青年創業基金", cost: 100000, monthlyUpkeep: 0,
+        id:"startupFund", name:"🚀 青年創業基金", cost: 100000, monthlyUpkeep: 1000,
         effects:{ jobs:+10, trust:+4 }, longTerm:"支持年輕創業者，刺激經濟活力"
       },
       {
@@ -392,7 +392,7 @@
         id:"flood",
         text:"暴雨造成道路受損，若立即修補可避免運行惡化。",
         choices:[
-          {label:"緊急修補：花$20,000，運行+6", apply:s=>{s.money-=20000; s.metrics.maint=Math.min(100,s.metrics.maint+6)}},
+          {label:"緊急修補：花$50,000，運行+6", apply:s=>{s.money-=50000; s.metrics.maint=Math.min(100,s.metrics.maint+6)}},
           {label:"暫緩：省錢但運行-6", apply:s=>{s.metrics.maint=Math.max(0,s.metrics.maint-6)}}
         ]
       },
@@ -408,16 +408,16 @@
         id:"match",
         text:"本月賽事表現出色，獲得比賽獎金$30,000，是否全數捐入基金？",
         choices:[
-          {label:"全數投入公益（+信任5）", apply:s=>{s.money+=30000; s.trust=Math.min(100,s.trust+5)}},
-          {label:"保留一半（+現金15,000）", apply:s=>{s.money+=15000}},
-          {label:"自行運用（無變化）", apply:s=>{}}
+          {label:"全數投入公益（+信任5）", apply:s=>{s.trust=Math.min(100,s.trust+5)}},
+          {label:"保留一半（+現金15,000，+信任1）", apply:s=>{s.money+=15000; s.trust=Math.min(100,s.trust+1)}},
+          {label:"自行運用（+現金30,000）", apply:s=>{s.money+=30000}}
         ]
       },
     {
         id:"scandal",
         text:"有人謠傳你挪用公益款項去買跑車，若不處理將嚴重影響你的聲譽。",
         choices:[
-          {label:"公開財務明細：花$10,000公關費澄清，信任+10", apply:s=>{s.money-=10000; s.trust=Math.min(100,s.trust+10)}},
+          {label:"公開財務明細：花$30,000公關費澄清，信任+10", apply:s=>{s.money-=30000; s.trust=Math.min(100,s.trust+10)}},
           {label:"冷處理：不回應謠言，信任-20", apply:s=>{s.trust=Math.max(0,s.trust-20)}}
         ]
       },
@@ -425,7 +425,7 @@
         id:"fundraiser",
         text:"當地企業看見了你的努力，願意舉辦一場聯合慈善募款，但需投入人力協辦。",
         choices:[
-          {label:"全力協辦：花費$8,000人力成本，隨機獲得$6~$50,000募款", apply:s=>{s.money-=8000; s.money+=Math.floor(Math.random()*(50000-20000+1))+6;}},
+          {label:"全力協辦：花費$10,000人力成本，隨機獲得$6~$30,000募款", apply:s=>{s.money-=10000; s.money+=Math.floor(Math.random()*(30000-6+1))+6;;}},
           {label:"婉拒：專注當下專案，無收益也無花費", apply:s=>{}}
         ]
       },
@@ -441,7 +441,7 @@
         id:"policy",
         text:"政府考慮推動一項新政策，將影響你部分專案的合法性。",
         choices:[
-          {label:"發揮影響力：籌辦講座，過程花費$15,000，提升信任+5，並避免運行-8", apply:s=>{s.money-=15000; s.trust=Math.min(100,s.trust+5);}},
+          {label:"發揮影響力：籌辦講座，過程花費$50,000，提升信任+5，並避免運行-8", apply:s=>{s.money-=50000; s.trust=Math.min(100,s.trust+5);}},
           {label:"不介入：省下費用，但運行-8", apply:s=>{s.metrics.maint=Math.max(0, s.metrics.maint-8);}}
         ]
       },
