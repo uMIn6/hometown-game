@@ -602,18 +602,15 @@
       toast(`已建置：${p.name}，家鄉看見了你的行動 💚`);
     }
 
-    // 月結算
+// 月結算
 function settleMonth(skipWarnings=false){
   // 計算本月淨收入
   const upkeep = Game.projects.reduce((a,p)=>a+p.monthlyUpkeep,0);
   const netIncome = Game.baseIncome - upkeep;
-
   // 收入
   Game.money += netIncome;
-  
   // 更新收入顯示，讓它顯示淨收入
   $('#income').textContent = fmt(netIncome);
-
   // 長期效果疊加
   Game.projects.forEach(p=>{
     for(const [k,v] of Object.entries(p.effects)){
@@ -633,11 +630,10 @@ function settleMonth(skipWarnings=false){
   if(Game.money < 0 && !skipWarnings){
     alert('注意：現金流為負！請增加收入或減少新建專案。');
   }
-
   // 時間遞進
   Game.month++; if(Game.month>12){ Game.month=1; Game.year++; }
   renderState(); renderProjects(); drawEvents();
-  toast('已結算本月：收入與維運已體現在指標');
+  toast('已結算本月：收入與運行已體現在指標');
   saveAuto();
 }
     function skipToSettle(){
