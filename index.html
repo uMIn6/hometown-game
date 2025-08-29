@@ -593,14 +593,23 @@
     }
 
     function buildProject(p){
-      if(Game.money < p.cost) return;
-      Game.money -= p.cost;
-      Game.projects.push({...p, builtAt:{year:Game.year, month:Game.month}});
-      // 即時信任微增（透明度）
-      Game.trust = Math.min(100, Game.trust + (p.effects.trust?Math.max(1,p.effects.trust):1));
-      renderState(); renderProjects();
-      toast(`已建置：${p.name}，家鄉看見了你的行動 💚`);
-    }
+  if (Game.money < p.cost) return;
+  // 一次性成本
+  Game.money -= p.cost;
+  // 永久減少每月職涯收入
+  Game.baseIncome = Math.max(0, Game.baseIncome - p.monthlyUpkeep);
+  // 記錄建置時間
+  Game.projects.push({
+    ...p,
+    builtAt: { year: Game.year, month: Game.month }
+  });
+  // （可選）微幅增加信任
+  const trustGain = p.effects.trust ? Math.max(1, p.effects.trust) : 1;
+  Game.trust = Math.min(100, Game.trust + trustGain);
+  renderState();
+  renderProjects();
+  toast(`已建置：${p.name}，每月職涯收入減少 ${fmt(p.monthlyUpkeep)}`);
+}
 
 // 月結算
 function settleMonth(skipWarnings=false){
