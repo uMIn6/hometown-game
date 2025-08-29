@@ -367,33 +367,34 @@
     }
 
     // 專案渲染
-    function renderProjects(){
-      const box = $('#projectList');
-      box.innerHTML = '';
-      
-      // 從全部專案中隨機選取 6 個
-      const shuffledCatalog = [...PROJECT_CATALOG].sort(() => 0.5 - Math.random());
-      const projectsToShow = shuffledCatalog.slice(0, 6);
+function renderProjects(){
+  const box = $('#projectList');
+  box.innerHTML = ''; // 清空容器內容
 
-      projectsToShow.forEach(p=>{
-        const el = document.createElement('div');
-        el.className = 'card project';
-        el.innerHTML = `
-          <div>
-            <h3>${p.name}</h3>
-            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維護支出：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
-            <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
-              ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
-            </div>
-          </div>
-          <div class="stack" style="align-items:end">
-            <button class="btn btn-acc" ${Game.money<p.cost?'disabled':''}>投資</button>
-            <span class="pill mini">${Game.money<p.cost?'資金不足':'可建置'}</span>
-          </div>
-        `;
-        el.querySelector('button').onclick=()=>buildProject(p);
-        box.appendChild(el);
-      });
+  // 確保每次呼叫都重新隨機選取 6 個專案
+  const shuffledCatalog = [...PROJECT_CATALOG].sort(() => 0.5 - Math.random());
+  const projectsToShow = shuffledCatalog.slice(0, 6);
+
+  // 遍歷這 6 個專案來渲染
+  projectsToShow.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'card project';
+    el.innerHTML = `
+      <div>
+        <h3>${p.name}</h3>
+        <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維護支出：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
+        <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
+          ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
+        </div>
+      </div>
+      <div class="stack" style="align-items:end">
+        <button class="btn btn-acc" ${Game.money<p.cost?'disabled':''}>投資</button>
+        <span class="pill mini">${Game.money<p.cost?'資金不足':'可建置'}</span>
+      </div>
+    `;
+    el.querySelector('button').onclick=()=>buildProject(p);
+    box.appendChild(el);
+  });
 
       // 已建置清單
       if(Game.projects.length){
