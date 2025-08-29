@@ -539,12 +539,12 @@
       let roll = Math.floor(Math.random() * 100) + 1; // 1~100
       let finalIncome;
 
-      if(roll <= 10){ // 10%機率
+      if(roll <= 5){ // 5%機率
         Game.baseIncome += 9999;
         toast('✨ 感恩！你的職涯月收入永久增加 +$9,999 ✨');
         finalIncome = 0; // 當月不領錢
-      } else { // 90%機率，隨機獲得一部分收入
-        const percentage = Math.floor(Math.random() * 91) + 10; // 10%~100%
+      } else { // 95%機率，隨機獲得一部分收入
+        const percentage = Math.floor(Math.random() * 30) + 1; // 1%~30%
         finalIncome = Math.floor(Game.baseIncome * (percentage / 100));
         toast(`➡️ 你選擇禱告，本月收入為 ${fmt(finalIncome)} （隨機結果：${percentage}%）`);
       }
