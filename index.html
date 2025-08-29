@@ -99,6 +99,44 @@
       content: "✅";
       font-size: 24px;
     }
+
+    /* 新增的社群信任樣式 */
+    .trust-gauge {
+      position: relative;
+      height: 20px;
+      background: #444; /* 黑暗底色 */
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .trust-bar {
+      height: 100%;
+      width: var(--trust-val);
+      background: linear-gradient(90deg, #a1a1aa, #34d399); /* 灰色到綠色漸層 */
+      transition: background-color 0.5s ease;
+      position: relative;
+    }
+    .trust-pointer {
+      position: absolute;
+      left: 50%;
+      height: 100%;
+      width: 2px;
+      background: #e5e7eb;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+    .trust-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .trust-label.left { left: 10%; }
+    .trust-label.right { left: 90%; }
   </style>
 </head>
 <body>
@@ -124,7 +162,13 @@
         </div>
         <div class="card">
           <div class="label">社群信任</div>
-          <div class="val" id="trust">50</div>
+          <div class="trust-gauge">
+            <div class="trust-pointer"></div>
+            <div class="trust-bar" id="trustBar"></div>
+          </div>
+          <div class="sub" style="text-align:center; margin-top:4px;display:flex; justify-content: space-between;">
+            <span>黑暗</span><span>平淡</span><span>光明</span>
+          </div>
         </div>
       </div>
 
@@ -382,7 +426,14 @@
       $('#income').textContent = fmt(Game.baseIncome);
       $('#month').textContent = Game.month;
       $('#year').textContent = Game.year;
-      $('#trust').textContent = Game.trust;
+      
+      // 社群信任長條圖
+      const trustBar = $('#trustBar');
+      const trustColor = Game.trust > 50 ? `#34d399` : `#71717a`;
+      const trustBgColor = Game.trust > 50 ? `#15803d` : `#3f3f46`;
+      trustBar.style.width = Game.trust + '%';
+      trustBar.style.background = `linear-gradient(90deg, ${trustBgColor}, ${trustColor})`;
+      
       $('#villageTag').textContent = `🏘️ 家鄉：${Game.villageName}`;
 
       // 影響分數（簡化：各指標平均 + 信任加權）
