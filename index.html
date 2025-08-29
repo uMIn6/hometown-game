@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-s=cale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>希望旅程</title>
   <style>
     :root{
@@ -593,8 +593,6 @@
     }
 
     // 事件綁定
-    $('#nextBtn').onclick = ()=> settleMonth();
-    $('#skipBtn').onclick = ()=> skipToSettle();
     $('#saveBtn').onclick = ()=> save('slot1');
     $('#loadBtn').onclick = ()=> load('slot1');
     $('#resetBtn').onclick = ()=>{ if(confirm('確定要開新局嗎？目前進度將清除。')){ localStorage.removeItem('hometown_saver_slot1'); localStorage.removeItem('hometown_saver_autosave'); location.reload(); } };
@@ -602,43 +600,41 @@
       const name = prompt('請輸入你的家鄉名稱（例如：班巴利、清水村…）', Game.villageName);
       if(name){ Game.villageName = name.trim().slice(0,20); renderState(); saveAuto(); }
     };
-
+    
     // 延遲縮小腳部提示
     const footer = $('#fixed-footer');
-    let isShrunk = false;
+    let shrinkTimeout;
 
-    footer.onclick = () => {
-        if(isShrunk) {
-            footer.classList.remove('shrink');
-            isShrunk = false;
-        }
-    };
+    function resetShrinkTimer() {
+        clearTimeout(shrinkTimeout);
+        footer.classList.remove('shrink');
+        shrinkTimeout = setTimeout(() => {
+            footer.classList.add('shrink');
+        }, 5000); // 5秒後自動縮小
+    }
     
+    // 點擊「行動」或「禱告」時，執行對應函數並重置計時器
     $('#nextBtn').onclick = () => {
       settleMonth();
-      if (isShrunk) {
-        footer.classList.remove('shrink');
-        isShrunk = false;
-      }
+      resetShrinkTimer();
     };
     
     $('#skipBtn').onclick = () => {
       skipToSettle();
-      if (isShrunk) {
-        footer.classList.remove('shrink');
-        isShrunk = false;
-      }
+      resetShrinkTimer();
     };
 
-    // 10秒後自動縮小
-    setTimeout(() => {
-        footer.classList.add('shrink');
-        isShrunk = true;
-    }, 10000); // 10秒
+    // 點擊縮小後的按鈕，展開提示
+    footer.onclick = () => {
+        if (footer.classList.contains('shrink')) {
+            resetShrinkTimer();
+        }
+    };
 
     // 初始化
     (function init(){
       renderState(); renderProjects(); drawEvents();
+      resetShrinkTimer();
       // 初始提示
       setTimeout(()=>toast('提示：禱告很重要，你要安靜你的心，凡事感恩會使你增強心理健康，如提升幸福感、減輕焦慮與抑鬱'), 600);
     })();
