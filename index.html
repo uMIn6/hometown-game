@@ -6,7 +6,7 @@
   <title>希望旅程</title>
   <style>
     :root{
-      --bg:#0f172a;        /* slate-900 */
+      --bg:#0f172a;       /* slate-900 */
       --panel:#111827ee;   /* gray-900/93 */
       --card:#0b1222;      /* dark card */
       --muted:#9ca3af;     /* gray-400 */
@@ -367,34 +367,34 @@
     }
 
     // 專案渲染
-function renderProjects(){
-  const box = $('#projectList');
-  box.innerHTML = ''; // 清空容器內容
+    function renderProjects(){
+      const box = $('#projectList');
+      box.innerHTML = ''; // 清空容器內容
 
-  // 確保每次呼叫都重新隨機選取 6 個專案
-  const shuffledCatalog = [...PROJECT_CATALOG].sort(() => 0.5 - Math.random());
-  const projectsToShow = shuffledCatalog.slice(0, 6);
+      // 確保每次呼叫都重新隨機選取 6 個專案
+      const shuffledCatalog = [...PROJECT_CATALOG].sort(() => 0.5 - Math.random());
+      const projectsToShow = shuffledCatalog.slice(0, 6);
 
-  // 遍歷這 6 個專案來渲染
-  projectsToShow.forEach(p=>{
-    const el = document.createElement('div');
-    el.className = 'card project';
-    el.innerHTML = `
-      <div>
-        <h3>${p.name}</h3>
-        <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維護支出：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
-        <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
-          ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
-        </div>
-      </div>
-      <div class="stack" style="align-items:end">
-        <button class="btn btn-acc" ${Game.money<p.cost?'disabled':''}>投資</button>
-        <span class="pill mini">${Game.money<p.cost?'資金不足':'可建置'}</span>
-      </div>
-    `;
-    el.querySelector('button').onclick=()=>buildProject(p);
-    box.appendChild(el);
-  });
+      // 遍歷這 6 個專案來渲染
+      projectsToShow.forEach(p=>{
+        const el = document.createElement('div');
+        el.className = 'card project';
+        el.innerHTML = `
+          <div>
+            <h3>${p.name}</h3>
+            <div class="muted mini">一次成本：${fmt(p.cost)}｜每月維護支出：${fmt(p.monthlyUpkeep)}<br>${p.longTerm}</div>
+            <div class="row" style="gap:6px; flex-wrap:wrap; margin-top:8px">
+              ${Object.entries(p.effects).map(([k,v])=>`<span class="tag">${labelOf(k)} ${v>0?'+':''}${v}</span>`).join('')}
+            </div>
+          </div>
+          <div class="stack" style="align-items:end">
+            <button class="btn btn-acc" ${Game.money<p.cost?'disabled':''}>投資</button>
+            <span class="pill mini">${Game.money<p.cost?'資金不足':'可建置'}</span>
+          </div>
+        `;
+        el.querySelector('button').onclick=()=>buildProject(p);
+        box.appendChild(el);
+      });
 
       // 已建置清單
       if(Game.projects.length){
@@ -436,20 +436,32 @@ function renderProjects(){
       pool.forEach(e=>{
         const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = `<h3>：${emojiFor(e.id)} ${e.text}</h3>`;
+        card.innerHTML = `<h3>${emojiFor(e.id)}：${e.text}</h3>`;
+        
+        const choicesContainer = document.createElement('div');
+        choicesContainer.className = 'choices-container'; // 可以添加CSS來佈局按鈕
+        
         e.choices.forEach(c=>{
           const btn = document.createElement('button');
-          btn.className='btn'; btn.textContent=c.label;
-          btn.onclick=()=>{ c.apply(Game); renderState(); disableCard(card); };
-          card.appendChild(btn);
-          card.appendChild(document.createTextNode(' '));
+          btn.className='btn';
+          btn.textContent=c.label;
+          btn.onclick=()=>{
+            c.apply(Game);
+            renderState();
+            disableCard(card);
+          };
+          choicesContainer.appendChild(btn);
+          choicesContainer.appendChild(document.createTextNode(' '));
         });
+        card.appendChild(choicesContainer);
         box.appendChild(card);
       });
     }
+    
     function emojiFor(id){
       return ({press:'📰', flood:'🌧️', sponsor:'🤝', match:'🥇'})[id] || '📌';
     }
+    
     function disableCard(card){
       [...card.querySelectorAll('button')].forEach(b=>{b.disabled=true; b.classList.add('btn-ghost')});
       const note = document.createElement('div'); note.className='muted mini'; note.textContent='已選擇'; card.appendChild(document.createElement('br')); card.appendChild(note);
@@ -475,7 +487,7 @@ function renderProjects(){
         Game.metrics.edu = Math.max(0, Game.metrics.edu - 2);
         Game.metrics.health = Math.max(0, Game.metrics.health - 2);
       }
-      // ⚠️ 新增這行：正常結算 → 扣運行 10
+      // 正常結算 → 扣運行 10
       Game.metrics.maint = Math.max(0, Game.metrics.maint - 10);
       // 現金不足警示
       if(Game.money < 0 && !skipWarnings){
@@ -489,59 +501,30 @@ function renderProjects(){
       saveAuto();
     }
     function skipToSettle(){
-      let roll = Math.floor(Math.random() * 10); // 0~9
+      let roll = Math.floor(Math.random() * 100) + 1; // 1~100
       let finalIncome;
-      switch(roll){
-        case 0: // 10%
-          finalIncome = 0;  
-          Game.baseIncome += 9999; // 永久加職涯月收入
-          toast('✨ 感恩！你的職涯月收入永久增加 +9999 ✨');
-          break;
-        case 1:  
-          finalIncome = Game.baseIncome / 20;
-          break;
-        case 2:  
-          finalIncome = Game.baseIncome / 10;
-          break;
-        case 3:  
-          finalIncome = Game.baseIncome / 6;
-          break;
-        case 4:  
-          finalIncome = Game.baseIncome / 7;
-          break;
-        case 5:  
-          finalIncome = Game.baseIncome / 11;
-          break;
-        case 6:  
-          finalIncome = Game.baseIncome / 12;
-          break;
-        case 7:  
-          finalIncome = Game.baseIncome / 15;
-          break;
-        case 8:  
-          finalIncome = Game.baseIncome / 17;
-          break;
-        case 9:  
-          finalIncome = Game.baseIncome / 18;
-          break;
+
+      if(roll <= 10){ // 10%機率
+        Game.baseIncome += 9999;
+        toast('✨ 感恩！你的職涯月收入永久增加 +$9,999 ✨');
+        finalIncome = 0; // 當月不領錢
+      } else { // 90%機率，隨機獲得一部分收入
+        const percentage = Math.floor(Math.random() * 91) + 10; // 10%~100%
+        finalIncome = Math.floor(Game.baseIncome * (percentage / 100));
+        toast(`➡️ 你選擇禱告，本月收入為 ${fmt(finalIncome)} （隨機結果：${percentage}%）`);
       }
-      // 取整數，避免小數點
-      finalIncome = Math.floor(finalIncome);
 
       Game.money += finalIncome;
 
-      if (roll !== 0) {
-        toast(`➡️ 你選擇禱告，本月收入為 ${finalIncome}（隨機結果）`);
-      }
       // 不扣運行、不算 upkeep，只推進時間
-      Game.month++;  
-      if(Game.month > 12){  
-        Game.month = 1;  
-        Game.year++;  
+      Game.month++;
+      if(Game.month > 12){
+        Game.month = 1;
+        Game.year++;
       }
 
-      renderState();  
-      renderProjects();  
+      renderState();
+      renderProjects();
       drawEvents();
       saveAuto();
     }
