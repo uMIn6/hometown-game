@@ -627,6 +627,8 @@ function settleMonth(skipWarnings=false){
       else { Game.metrics[k] = clamp(Game.metrics[k] + v*0.5, 0, 100); }
     }
   });
+    // 維護值每月扣減
+  Game.metrics.maint = Math.max(0, Game.metrics.maint - 10);
   // 運行不足懲罰
   if(Game.metrics.maint < 30){
     Game.trust = Math.max(0, Game.trust - 4);
